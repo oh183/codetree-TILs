@@ -10,7 +10,10 @@ for i in range(n):
             else:
                 arr_1[i][j] = arr_1[i][j - 2] + (n) * 2
         else:
-            arr_1[i][j] = 2 * n - arr_1[i][j - 1] - 1
+            if j == 1:
+                arr_1[i][j] = 2 * n - arr_1[i][j - 1] - 1
+            else:
+                arr_1[i][j] = arr_1[i][j - 2] + (n) * 2
 
 # print
 for i in range(n):

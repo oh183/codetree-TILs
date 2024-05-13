@@ -13,8 +13,8 @@ for _ in range(n):
 
 # result array
 result = [
-    [1 for _ in range(n)]
-    for _ in range(m)
+    [1 for _ in range(m)]
+    for _ in range(n)
 ]
 
 # calculation

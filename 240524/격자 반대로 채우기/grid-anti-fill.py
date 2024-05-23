@@ -39,6 +39,8 @@ while startrow != endrow or startcol != 0:
         else:
             direction = 1
             startrow += 1
+            if startrow == endrow:
+                myarray[startrow][startcol] = value
     elif direction == 1:
         # go down
         while startrow < n:
@@ -48,7 +50,10 @@ while startrow != endrow or startcol != 0:
         direction = -1
         startrow = n-1
 
-for i in range(n):
-    for j in range(n):
-        print(myarray[i][j], end=" ")
-    print()
+if n == 1:
+    print('1')
+else:
+    for i in range(n):
+        for j in range(n):
+            print(myarray[i][j], end=" ")
+        print()

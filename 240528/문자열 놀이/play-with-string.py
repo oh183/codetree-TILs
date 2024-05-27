@@ -1,7 +1,8 @@
 string, num_q = map(str, input().split())
 
 questions = [
-    input().replace(" ", "") for _ in range(int(num_q))
+    input().split()
+    for _ in range(int(num_q))
 ]
 
 # Replace operation

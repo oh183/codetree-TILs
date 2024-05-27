@@ -7,4 +7,4 @@ ba = second + first
 if ab == ba:
     print("true")
 else:
-    print("else")
+    print("false")

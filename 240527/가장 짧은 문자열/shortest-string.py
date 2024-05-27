@@ -1,9 +1,6 @@
 # get input
 myarray = []
 for _ in range(3):
-    myarray.append(list(map(str, input())))
+    myarray.append(str(input()))
 
-largest = min(myarray)
-smallest = max(myarray)
-
-print(len(largest) - len(smallest))
+print(len(min(myarray)) - len(max(myarray)))

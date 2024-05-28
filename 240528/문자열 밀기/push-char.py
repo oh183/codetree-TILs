@@ -1,8 +1,8 @@
 # get string 
-string = str(input())
+string = list(input())
 
 # shift to right by 1
-string = string[1:-1] + string[-1] + string[0]
-
+a = string.pop(0)
+string.append(a)
 # print
-print(string)
+print(''.join(string))

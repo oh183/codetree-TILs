@@ -7,16 +7,17 @@ for i in a:
     if ord('0') <= ord(i) <= ord('9'):
         temp += i
     else:
-        result += int(temp)
-        temp = ""
         break
+
+result += int(temp)
+temp = ""
 
 for i in b:
     if ord('0') <= ord(i) <= ord('9'):
         temp += i
-    else:  
-        result += int(temp)
-        temp = ""
+    else:
         break
+
+result += int(temp)
 
 print(result)

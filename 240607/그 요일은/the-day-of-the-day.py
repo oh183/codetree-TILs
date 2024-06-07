@@ -11,7 +11,20 @@ def daycalc(month):
     return max_month
 
 ctr = 1
-# d1 is monday
+
+# calculate starting date
+if target == "Tue":
+    d1 += 1
+elif target == "Wed":
+    d1 += 2
+elif target == "Thu":
+    d1 += 3
+elif target == "Sat":
+    d1 += 4
+elif target == "Sun":
+    d1 += 5  
+
+
 while True:
     max_month = daycalc(m1)
     if m1 > m2:

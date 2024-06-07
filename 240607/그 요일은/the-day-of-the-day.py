@@ -36,6 +36,10 @@ while True:
     if m1 > m2:
         break
     
+    if m1 == m2 and d1 > d2:
+        ctr -= 1
+        break
+    
     if m1 == m2 and d1 + 7 > d2:
         break
 

@@ -40,6 +40,6 @@ while True:
 
     if d1 > max_month: 
         m1 += 1
-        d1 = d1 - max_month
+        d1 -= daycalc(m1)
 
 print(ctr)

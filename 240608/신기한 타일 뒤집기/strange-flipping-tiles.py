@@ -31,10 +31,10 @@ else:
     end = start - int(x)
 
 if start > end:
-    black = abs(end - start)
-    white = length - black
+    white = abs(end - start)
+    black = length - white
 else:
-    black = abs(end - start) + length
-    white = 0
+    white = abs(end - start) + length
+    black = 0
 
-print(black, white)
+print(white, black)

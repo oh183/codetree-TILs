@@ -27,12 +27,12 @@ elif target == "Sun":
     d1 += 6  
 
 
+if d1 > daycalc(m1):
+    d1 -=  daycalc(m1)
+    m1 += 1
+
 while True:
-    max_month = daycalc(m1)
-    if m1 > m2:
-        break
-    
-    if m1 == m2 and d1 + 7 > d2:
+    if m1 > m2 or (m1 == m2 and d1 > d2):
         break
 
     d1 += 7

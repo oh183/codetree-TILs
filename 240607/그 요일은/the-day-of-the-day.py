@@ -32,14 +32,18 @@ if d1 > daycalc(m1):
     m1 += 1
 
 while True:
-    if m1 > m2 or (m1 == m2 and d1 > d2):
+    max_month = daycalc(m1)
+    if m1 > m2:
+        break
+    
+    if m1 == m2 and d1 + 7 > d2:
         break
 
     d1 += 7
     ctr += 1
 
-    if d1 > max_month: 
-        m1 += 1
+    if d1 > max_month:
         d1 -= daycalc(m1)
+        m1 += 1
 
 print(ctr)

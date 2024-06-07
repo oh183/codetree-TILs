@@ -1,29 +1,16 @@
 n = int(input())
 commands = [
-    tuple(input().split()) for _ in range(n)
+    tuple(map(int,input().split())) for _ in range(n)
 ]
 
-checklist = [0] * 200
+checklist = [0] * 201
 
 for x1, x2 in commands:
-    start = int(x1)
-    end = int(x2) - 1
-    while start <= end:
-        checklist[start] += 1
-        start += 1
+    x1, x2 = x1 + 100, x2 + 100
 
-result = {}
+    for i in range(x1, x2):
+        checklist[i] += 1
 
-for el in checklist:
-    if el not in result:
-        result[el] = 1
-    else:
-        result[el] += 1
+max_num = max(checklist)
 
-maxkey = 0
-
-for key,val in result.items():
-    if maxkey < key and val > 1:
-        maxkey = key
-
-print(maxkey)
+print(max_num)

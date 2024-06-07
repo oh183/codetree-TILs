@@ -6,8 +6,8 @@ commands = [
 checklist = [0] * 200
 
 for x1, x2 in commands:
-    start = int(x1)
-    end = int(x2)
+    start = int(x1) + 1
+    end = int(x2) - 1
     while start <= end:
         checklist[start] += 1
         start += 1

@@ -19,10 +19,12 @@ elif target == "Wed":
     d1 += 2
 elif target == "Thu":
     d1 += 3
-elif target == "Sat":
+elif target == "Fri":
     d1 += 4
+elif target == "Sat":
+    d1 += 5
 elif target == "Sun":
-    d1 += 5  
+    d1 += 6  
 
 
 while True:

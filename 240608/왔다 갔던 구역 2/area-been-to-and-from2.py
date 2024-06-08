@@ -5,7 +5,7 @@ commands = [
 ]
 
 # create checklist
-offset = 100
+offset = 1000000
 checked = [0] * (2 * offset + 1)
 start = offset
 

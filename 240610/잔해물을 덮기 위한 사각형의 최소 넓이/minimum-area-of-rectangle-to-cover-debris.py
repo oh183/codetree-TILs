@@ -21,11 +21,16 @@ for r in range(len(arr)):
         if arr[r][c] == 1:
             row.append(r)
             col.append(c)
+x1_min, x2_max, y1_min, y2_max = 0, 0, 0, 0
 
-x1_min = min(col)
-y1_min = min(row)
-x2_max = max(col) + 1
-y2_max = max(row) + 1
+if row:
+    x1_min = min(col)
+    y2_max = max(row) + 1
+
+if col:
+    y1_min = min(row)
+    x2_max = max(col) + 1
+
 
 # count
 print((y2_max - y1_min) * (x2_max - x1_min))

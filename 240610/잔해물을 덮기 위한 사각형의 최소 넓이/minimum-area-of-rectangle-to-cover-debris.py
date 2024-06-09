@@ -12,7 +12,7 @@ for i in range(2):
 
     for r in range(x1, x2):
         for c in range(y1, y2):
-            arr[r][c] = i
+            arr[r][c] = i + 1
 
 # find min(x1, y1) max(x2, y2)
 row, col = [], [] 
@@ -24,7 +24,7 @@ for r in range(len(arr)):
 
 x1_min = min(col)
 y1_min = min(row)
-x2_max = max(col)
+x2_max = max(col) + 1
 y2_max = max(row) + 1
 
 # count

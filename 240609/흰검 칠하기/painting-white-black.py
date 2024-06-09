@@ -30,23 +30,20 @@ for x1, x2 in commands:
     x1 = int(x1)
 
     if x2 == 'L':
-        start = starting - x1
-        end = starting
-        starting -= x1
-        # subtract
-        for i in range(start, end):
-            totalCount[i] = "White"
-            whiteCount[i] += 1
-
+        while x1 > 0:
+            totalCount[starting] = "White"
+            whiteCount[starting] += 1
+            x1 -= 1
+            if x1:
+                starting -= 1
     else:
-        # addition
-        start = starting
-        end = starting + x1
-        starting += x1
-        # subtract
-        for i in range(start, end):
-            totalCount[i] = "Black"
-            blackCount[i] += 1
+        while x1 > 0:
+            totalCount[starting] = "Black"
+            blackCount[starting] += 1
+            x1 -= 1
+            if x1:
+                starting += 1
+
 
 ### 카운팅
 for i in range(MaxRange + 1):

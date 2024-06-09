@@ -1,44 +1,62 @@
-MAX_K = 100000
-# 변수 선언 및 입력:
+# 인풋의 조건을 고려한 오프셋 
+offset = 100000
+
+# 스타팅 포인트 셋
+starting = offset
+
+# 오프셋을 통해 계산된 최대 값 범위
+MaxRange = 2 * offset
+
+# 검정, 흰색이 몇번 나온지를 저장하는 배열
+totalCount = [0] * (MaxRange + 1)
+
+# 흰색이 몇번 나온지 계산하는 배열
+whiteCount = [0] * (MaxRange + 1)
+
+# 검정이 몇번 나온지 계산하는 배열 
+blackCount = [0] * (MaxRange + 1)
+
+# 결과값 저장
+blackFin, whiteFin, greyFin = 0, 0, 0
+
+### 인풋
 n = int(input())
-a = [0] * (2 * MAX_K + 1)
-cnt_b = [0] * (2 * MAX_K + 1)
-cnt_w = [0] * (2 * MAX_K + 1)
-b, w, g = 0, 0, 0
+commands = [
+    tuple(input().split()) for _ in range(n)
+]
 
-cur = MAX_K
-for _ in range(n):
-    x, c = tuple(input().split())
-    x = int(x)
+### 계산 
+for x1, x2 in commands:
+    x1 = int(x1)
 
-    if c == 'L':
-        # x칸 왼쪽으로 칠합니다.
-        while x > 0:
-            a[cur] = 1
-            cnt_w[cur] += 1
-            x -= 1
+    if x2 == 'L':
+        start = starting - x1
+        end = starting
+        starting -= x1
+        # subtract
+        for i in range(start, end):
+            totalCount[i] = "White"
+            whiteCount[i] += 1
 
-            if x: 
-                cur -= 1
     else:
-        # x칸 오른쪽으로 칠합니다.
-        while x > 0:
-            a[cur] = 2
-            cnt_b[cur] += 1
-            x -= 1
+        # addition
+        start = starting
+        end = starting + x1
+        starting += x1
+        # subtract
+        for i in range(start, end):
+            totalCount[i] = "Black"
+            blackCount[i] += 1
 
-            if x: 
-                cur += 1
-
-for i in range(2 * MAX_K + 1):
-    # 검은색과 흰색으로 두 번 이상 칠해진 타일은 회색입니다.
-    if cnt_b[i] >= 2 and cnt_w[i] >= 2: 
-        g += 1
+### 카운팅
+for i in range(MaxRange + 1):
+    if blackCount[i] >= 2 and whiteCount[i] >= 2: 
+        greyFin += 1
     # 그렇지 않으면 현재 칠해진 색깔이 곧 타일의 색깔입니다.
-    elif a[i] == 1: 
-        w += 1
-    elif a[i] == 2: 
-        b += 1
+    elif totalCount[i] == "White": 
+        whiteFin += 1
+    elif totalCount[i] == "Black": 
+        blackFin += 1
 
-# 정답을 출력합니다.
-print(w, b, g)
+### 출력
+print(whiteFin, blackFin, greyFin)

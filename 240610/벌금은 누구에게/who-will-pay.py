@@ -14,5 +14,6 @@ for i in range(m):
     # 체크
     if students[penalty] == k:
         result = penalty
+        break
 
 print(result)

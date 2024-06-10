@@ -49,7 +49,7 @@ for _ in range(M):
 # counting
 result = -1
 for i in range(len(sim_a)):
-    if sim_a[i] == sim_b[i] and sim_a != 0:
+    if sim_a[i] == sim_b[i] and sim_a[i] != 0:
         result = i + 1
         break
 

@@ -1,7 +1,7 @@
 N, M = map(int, input().split())
 
 # A 부터 시뮬레이션
-offset = 1000
+offset = 1000000
 MaxRange = 2 * offset
 a_sim = [0] * (MaxRange + 1)
 starting = offset

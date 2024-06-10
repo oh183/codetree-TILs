@@ -3,14 +3,12 @@ inputs = input().split()
 
 ans, cnt = 0, 0
 for i in range(len(inputs)):
-    if i >= 1 and (int(inputs[i]) > target and int(inputs[i-1]) > target):
+    # is it greater than the target t? 
+    if int(inputs[i]) > target:
+        # then compare with i - 1
         cnt += 1
     else:
-        cnt = 1
+        cnt = 0
     
     ans = max(ans, cnt)
-
-if ans == 1:
-    print(0)
-else:
-    print(ans)
+print(ans)

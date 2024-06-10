@@ -1,6 +1,6 @@
 n = int(input())
 arr = [int(input()) for _ in range(n)]
-num_freq = [0] * 1001
+num_freq = [1] * 1001
 counter = 0
 
 for i in range(len(arr)):

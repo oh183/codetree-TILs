@@ -9,4 +9,7 @@ for i in range(len(inputs)):
         cnt = 1
     
     ans = max(ans, cnt)
-print(ans)
+if ans == 1:
+    print(0)
+else:
+    print(ans)

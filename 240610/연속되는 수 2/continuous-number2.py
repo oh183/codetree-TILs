@@ -1,6 +1,6 @@
 n = int(input())
 arr = [int(input()) for _ in range(n)]
-num_freq = [1] * 1001
+num_freq = [0] * 1001
 counter = 0
 
 for i in range(len(arr)):
@@ -19,4 +19,11 @@ for i in range(len(arr)):
 
         counter = 0
 
-print(max(num_freq))
+if counter != 0:
+    if counter > 0:
+        num_freq[current_number] = counter
+
+if max(num_freq) == 0:
+    print("1")
+else:
+    print(max(num_freq))

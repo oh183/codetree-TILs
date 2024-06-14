@@ -3,7 +3,8 @@ n, m = tuple(map(int, input().split()))
 
 # create 2d result array
 result = [ 
-    [0 for _ in range(n)] for _ in range(m)
+    [0 for _ in range(m)] 
+    for _ in range(n)
 ]
 
 # dx dy technique (right  -> down -> left -> up )
@@ -29,7 +30,7 @@ total = (n * m) + 1
 for i in range(2, total):
     # next move
     nx, ny = x + dxs[dirr], y + dys[dirr]
-
+    
     # range check
     if not in_range(nx, ny, n, m) or result[nx][ny] > 0:
         # update the direction
@@ -40,7 +41,7 @@ for i in range(2, total):
     result[x][y] = i
     
 # print the result
-for r in range(len(result)):
-    for c in range(len(result)):
+for r in range(n):
+    for c in range(m):
         print(result[r][c], end =" ")
     print()

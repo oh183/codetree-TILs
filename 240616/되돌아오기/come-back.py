@@ -28,23 +28,24 @@ dist_dict = {
 }
 
 # traverse N times
-time_e = 0
+time_e = 1
+term = 1
 total = 0
 x, y = offset, offset
 for direction, distance in commands:
     direction = dist_dict[direction]
     distance = int(distance)
     
-    while distance > 0:
+    while distance > 0 and term:
         nx, ny = x + dx[direction], y + dy[direction]
-        
         if answer[nx][ny] != 999:
             answer[nx][ny] = 1
-            time_e += 1
         else:
-            total = time_e + 1
+            total = time_e
+            term = 0
             break
         distance -= 1
+        time_e += 1
         x, y = nx, ny
 
 if total == 0:

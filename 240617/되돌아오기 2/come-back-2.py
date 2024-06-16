@@ -26,7 +26,7 @@ for command in commands:
         answer = timer
         break
 
-if timer:
+if answer:
     print(timer)
 else:
     print("-1")

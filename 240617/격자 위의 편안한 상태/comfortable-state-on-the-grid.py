@@ -27,7 +27,7 @@ def is_comfort(r, c):
         nr, nc = r + x, c + y
         if in_range(nr,nc) and grid[nr][nc] == 1:  
             counter += 1
-    if counter > 2:
+    if counter == 3:
         return True
     else:
         return False

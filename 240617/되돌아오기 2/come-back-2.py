@@ -13,7 +13,7 @@ answer = 0
 for command in commands: 
     if command == 'L':
         # left 90 turn 
-        direction = (direction - 3) % 4
+        direction = (direction + 3) % 4
     elif command == 'R':
         # right 90 turn
         direction = (direction + 1) % 4

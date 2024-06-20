@@ -8,7 +8,7 @@ def binary_to_decimal(number):
         result += int(val) * pow(2, idx)    
     return result
 
-MaxVal = []
+MaxVal = [0]
 
 for idx, val in enumerate(binary):
     if val == '0':

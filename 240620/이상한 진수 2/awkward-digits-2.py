@@ -8,11 +8,14 @@ def binary_to_decimal(number):
         result += int(val) * pow(2, idx)    
     return result
 
-MaxVal = [0]
+MaxVal = [binary_to_decimal(binary)]
 
 for idx, val in enumerate(binary):
     if val == '0':
         tempNumber = binary[:idx] + '1' + binary[idx + 1:]
         MaxVal.append(binary_to_decimal(tempNumber))
 
-print(max(MaxVal))
+if max(MaxVal) == binary_to_decimal(binary):
+    print(max(MaxVal) - 1)
+else:
+    print(max(MaxVal))

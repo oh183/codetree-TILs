@@ -5,6 +5,7 @@ grid = [
 
 def is_happy(seq, m):
     cnt = 1
+    res = 1
     
     for i in range(1, n):
         if seq[i - 1] == seq[i]:

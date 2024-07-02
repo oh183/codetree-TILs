@@ -13,7 +13,7 @@ def is_happy(seq, m):
         else:
             cnt = 1
         res = max(res, cnt)
-    return res >= m
+    return 1 if res >= m else 0
 
 total = 0 
 for row in range(n):

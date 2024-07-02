@@ -10,6 +10,9 @@ def is_happy(seq):
             cnt += 1
         else:
             cnt = 1
+
+        if cnt == m:
+            return True
         res = max(res, cnt)
     return res >= m
 
@@ -23,10 +26,8 @@ val = ""
 for col in range(n):
     for row in range(n):
         val += str(grid[row][col])
-    vertical.append(val)
+    if is_happy(list(val)):
+        total += 1
     val = ""
-
-for i in vertical:
-    total += is_happy(i)
-
+        
 print(total)

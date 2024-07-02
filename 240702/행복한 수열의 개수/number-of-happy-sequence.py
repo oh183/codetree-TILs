@@ -21,13 +21,15 @@ total = 0
 for row in range(n):
     total += is_happy(grid[row][:])
 
-vertical = []
-val = ""
-for col in range(n):
-    for row in range(n):
-        val += str(grid[row][col])
-    if is_happy(list(val)):
-        total += 1
-    val = ""
-        
+vertical = [
+    [0 for _ in range(n)] for _ in range(n)
+]
+
+for c in range(n):
+    for r in range(n):
+        vertical[c][r] = grid[r][c]
+
+for i in vertical:
+    total += is_happy(i)
+
 print(total)

@@ -1,43 +1,32 @@
-# 변수 선언 및 입력:
-n, m = tuple(map(int, input().split()))
+n, m = map(int, input().split())
 grid = [
-    list(map(int, input().split()))
-    for _ in range(n)
+    list(map(int, input().split())) for _ in range(n)
 ]
-seq = [0 for _ in range(n)]
 
-
-def is_happy_sequence():
-    # 주어진 seq가 행복한 수열인지 판단하는 함수입니다.
-    consecutive_count, max_ccnt = 1, 1
-    for i in range(1, n):
+def is_happy(seq):
+    cnt, res = 1, 1
+    for i in range(1, len(seq)):
         if seq[i - 1] == seq[i]:
-            consecutive_count += 1
+            cnt += 1
         else:
-            consecutive_count = 1
-        
-        max_ccnt = max(max_ccnt, consecutive_count)
-    
-    # 최대로 연속한 회수가 m이상이면 true를 반환합니다. 
-    return max_ccnt >= m
+            cnt = 1
+        res = max(res, cnt)
+    return res >= m
 
 
-num_happy = 0
+total = 0 
+for row in range(n):
+    total += is_happy(grid[row][:])
 
-# 먼저 가로로 행복한 수열의 수를 셉니다.
-for i in range(n):
-    seq = grid[i][:]
+vertical = []
+val = ""
+for col in range(n):
+    for row in range(n):
+        val += str(grid[row][col])
+    vertical.append(val)
+    val = ""
 
-    if is_happy_sequence():
-        num_happy += 1
+for i in vertical:
+    total += is_happy(i)
 
-# 세로로 행복한 수열의 수를 셉니다.
-for j in range(n):
-    # 세로로 숫자들을 모아 새로운 수열을 만듭니다.
-    for i in range(n):
-        seq[i] = grid[i][j]
-
-    if is_happy_sequence():
-        num_happy += 1
-
-print(num_happy)
+print(total)

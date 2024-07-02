@@ -12,7 +12,7 @@ def is_happy(seq, m):
             cnt += 1
         else:
             cnt = 1
-        res = max(1, cnt)
+        res = max(res, cnt)
     return res >= m
 
 total = 0 

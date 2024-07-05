@@ -11,26 +11,30 @@ commands = [
 
 # remove block 
 def clean():
-    for s, e in commands:
-        for idx in range(len(Blocks) - s, len(Blocks) - e, -1):
+    global Blocks
+    Blocks.reverse()
+    for start, end in commands:
+        for idx in range(start - 1, end):
             Blocks[idx] = 0
+    Blocks.reverse()
 
-# update the block
+# update 
 def update():
     global Blocks
     temp = []
-    for val in Blocks:
-        if val > 0:
-            temp.append(val)
+    for i in Blocks:
+        if i > 0:
+            temp.append(i)
     Blocks = temp
 
-def printt():
+# print
+def pprint():
     for i in Blocks:
-        if i != 0:
-            print(i)
+        print(i)
 
-for i in range(len(commands)):
+
+for _ in range(len(commands)):
     clean()
     update()
 print(len(Blocks))
-printt()
+pprint()

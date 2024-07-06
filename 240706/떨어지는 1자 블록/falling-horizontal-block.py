@@ -6,9 +6,12 @@ grid = [
 
 # move_down 가능한지 보는 함수
 def canMove(new_x, start, end):
-    for i in range(start, end):
-        if grid[new_x][i] == 1:
-            return False
+    if 0 <= new_x < n:
+        for i in range(start, end):
+            if grid[new_x][i] == 1:
+                return False
+    else:
+        return False
     return True
 
 # move_down execute 함수

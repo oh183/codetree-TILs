@@ -31,6 +31,27 @@ def printList(myArr):
         print()
     print()
 
+
+def rotate_submatrix(matrix, start_row, start_col, size):
+    # 일부분 추출
+    submatrix = [row[start_col:start_col + size] for row in matrix[start_row:start_row + size]]
+
+    # Create a new submatrix to store the rotated version
+    rotated_submatrix = [[0 for _ in range(size)] for _ in range(size)]
+
+    # 90도 회전
+    for i in range(size):
+        for j in range(size):
+            rotated_submatrix[j][size - 1 - i] = submatrix[i][j]
+
+    # 다시 업데이트
+    for i in range(size):
+        for j in range(size):
+            matrix[start_row + i][start_col + j] = rotated_submatrix[i][j]
+
+    return matrix
+
+
 for second in range(k):
     # (1) 이동 시작
     # 동시에 이동하기 위해서 만든 참가자 배열
@@ -73,16 +94,6 @@ for second in range(k):
                 syncArr[newX][newY] = 100
                 moved += 1
 
-    # K 초 전에 모든 참가자가 탈출에 성공한다면, 게임이 끝납니다
-    cnt = 0
-    for i in range(n):
-        for j in range(n):
-            if miro[i][j] == 100:
-                cnt += 1
-
-    if cnt == 0:
-        break
-
     # 배열 싱크
     for i in range(n):
         for j in range(n):
@@ -107,8 +118,6 @@ for second in range(k):
                     if userCnt and exitCnt:
                         # 유저와 exit 을 한개라도 포함하는 조합
                         rotate_arr.append((size, start_row, start_col))
-    if second == 2:
-        abc = 1
 
     # 모든 조합을 찾은 후 가장 작은 사이즈를 (사이즈 -> r 좌표 크기 -> c 좌표 순으로 정렬)
 
@@ -120,23 +129,12 @@ for second in range(k):
     for i in range(n):
         for j in range(n):
             rotated[i][j] = miro[i][j]
-    print("Selected Size: ", size, " Start Row: ", start_row, " Start Col: ", start_col)
+
 
     # 90도 회전
-    newArr = miro[start_row: start_row + size][start_col: start_col + size]
-    printList(newArr)
-    newCopy = [[0 for _ in range(len(newArr))] for _ in range(len(newArr))]
-    for i in range(len(newArr)):
-        for j in range(len(newArr)):
-            newCopy[i][j] = newArr[i][j]
+    miro = rotate_submatrix(miro, start_row, start_col, size)
 
-    for i in range(len(newArr)):
-        for j in range(len(newArr)):
-            newArr[j][size - i - 1] = newCopy[i][j]
-
-    printList(newArr)
-    printList(miro)
-
+    # 내구도 업데이트
     for i in range(start_row, start_row + size):
         for j in range(start_col, start_col + size):
             if 0 < miro[i][j] < 10:
@@ -145,6 +143,7 @@ for second in range(k):
             if miro[i][j] == 99999:
                 exitCoord = (i, j)
 
+
     # 참가자 배열 업데이트
     userCoord = []
     for i in range(n):
@@ -152,10 +151,17 @@ for second in range(k):
             if miro[i][j] == 100:
                 userCoord.append((i + 1, j + 1))
 
-    print("######## FINAL #########")
-    printList(miro)
+    # K 초 전에 모든 참가자가 탈출에 성공한다면, 게임이 끝납니다
+    cnt = 0
+    for i in range(n):
+        for j in range(n):
+            if miro[i][j] == 100:
+                cnt += 1
+
+    if cnt == 0:
+        break
 
 # 최종 결과 출력
 x, y = exitCoord
 print(moved)
-print(x, y)
+print(x + 1, y + 1)

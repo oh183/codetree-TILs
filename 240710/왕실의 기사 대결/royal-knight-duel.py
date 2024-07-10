@@ -23,12 +23,13 @@ def try_move(idx, direction):
     # init
     for i in range(1, n + 1):
         moved[i] = False
-        damage_knight[i] = False
+        damage_knight[i] = 0
         nextRow_knight[i] = row_knight[i]
         nextCol_knight[i] = col_knight[i]
 
     # bfs
-    q = deque([idx])
+    q = deque()
+    q.append(idx)
     moved[idx] = True
 
     while q:
@@ -59,12 +60,12 @@ def try_move(idx, direction):
             if row_knight[i] > nextRow_knight[x] + height_knight[x] - 1 or nextRow_knight[x] > row_knight[i] + height_knight[i] - 1: 
                 continue
             # 가로로 안겹치는 경우 
-            if col_knight[i] > nextCol_knight[x] + width_knight[x] - 1 or nextCol_knight[x] > row_knight[i] + width_knight[i] - 1:
+            if col_knight[i] > nextCol_knight[x] + width_knight[x] - 1 or nextCol_knight[x] > col_knight[i] + width_knight[i] - 1:
                 continue
             
             # 여기까지 도달했으면, 겹치는게 있었다는 뜻이니까 -> 큐에 넣어서 계속 체크
-            q.append(x)
-            moved[x] = True
+            q.append(i)
+            moved[i] = True
             
     damage_knight[idx] = 0
     return True
@@ -96,9 +97,9 @@ for _ in range(q):
     idx, d = map(int, input().split())
     movePiece(idx, d)
     
-ans = 0
+
+res = 0
 for i in range(1, n + 1):
     if health_knight[i] > 0:
-        ans += init_health[i] - health_knight[i]
-
-print(ans)
+        res += (init_health[i] - health_knight[i])
+print(res)

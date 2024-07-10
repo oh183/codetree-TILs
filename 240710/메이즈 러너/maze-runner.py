@@ -82,17 +82,21 @@ for second in range(k):
             posArray = sorted(dist, key = lambda x: (x[0], x[1], x[2], x[3]))
             tempDist, dirr, newX, newY = posArray[0]
 
-        if tempDist < currDist:
-            # 현재 이동하는 위치가 출구인 경우
-            if (newX, newY) == (exitX, exitY):
-                # 탈출
-                moved += 1
-                miro[userX][userY] = 0
+            if tempDist < currDist:
+                # 현재 이동하는 위치가 출구인 경우
+                if (newX, newY) == (exitX, exitY):
+                    # 탈출
+                    moved += 1
+                    miro[userX][userY] = 0
+                else:
+                    # 새로 이동하는 위치가 현재 위치보다 출구에 더 가까우면
+                    miro[userX][userY] = 0
+                    syncArr[newX][newY] = 100
+                    moved += 1
             else:
-                # 새로 이동하는 위치가 현재 위치보다 출구에 더 가까우면
-                miro[userX][userY] = 0
-                syncArr[newX][newY] = 100
-                moved += 1
+                syncArr[userX][userY] = 100
+        else:
+            syncArr[userX][userY] = 100
 
     # 배열 싱크
     for i in range(n):
@@ -100,11 +104,17 @@ for second in range(k):
             if syncArr[i][j] == 100:
                 miro[i][j] = 100
 
+    # 참가자 배열 업데이트
+    userCoord = []
+    for i in range(n):
+        for j in range(n):
+            if miro[i][j] == 100:
+                userCoord.append((i + 1, j + 1))
     # (2) 미로 회전
 
     # (2-1) 완전탐색으로 가장 작은 정사각형 찾기
     rotate_arr = []
-    for size in range(1, n + 1):
+    for size in range(2, n + 1):
         if not rotate_arr:
             for start_row in range(n - size + 1):
                 for start_col in range(n - size + 1):
@@ -120,29 +130,21 @@ for second in range(k):
                         rotate_arr.append((size, start_row, start_col))
 
     # 모든 조합을 찾은 후 가장 작은 사이즈를 (사이즈 -> r 좌표 크기 -> c 좌표 순으로 정렬)
+    if rotate_arr:
+        smallest = sorted(rotate_arr, key=lambda x: (x[0], x[1], x[2]))
+        size, start_row, start_col = smallest[0]
 
-    smallest = sorted(rotate_arr, key = lambda x: (x[0], x[1], x[2]))
-    size, start_row, start_col = smallest[0]
+        # 회전을 위해 현재 배열을 복사 (내구도 -1)
+        miro = rotate_submatrix(miro, start_row, start_col, size)
 
-    # 회전을 위해 현재 배열을 복사 (내구도 -1)
-    rotated = [[0 for _ in range(n)] for _ in range(n)]
-    for i in range(n):
-        for j in range(n):
-            rotated[i][j] = miro[i][j]
+        # 내구도 업데이트
+        for i in range(start_row, start_row + size):
+            for j in range(start_col, start_col + size):
+                if 0 < miro[i][j] < 10:
+                    miro[i][j] -= 1
 
-
-    # 90도 회전
-    miro = rotate_submatrix(miro, start_row, start_col, size)
-
-    # 내구도 업데이트
-    for i in range(start_row, start_row + size):
-        for j in range(start_col, start_col + size):
-            if 0 < miro[i][j] < 10:
-                miro[i][j] -= 1
-
-            if miro[i][j] == 99999:
-                exitCoord = (i, j)
-
+                if miro[i][j] == 99999:
+                    exitCoord = (i, j)
 
     # 참가자 배열 업데이트
     userCoord = []

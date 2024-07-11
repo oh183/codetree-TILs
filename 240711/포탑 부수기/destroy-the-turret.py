@@ -59,7 +59,7 @@ def cannonAttack(attacker_r, attacker_c, target_r, target_c):
         nx = (nx + n) % n
         ny = (ny + m) % m
 
-        if grid[nx][ny] and (nx, ny) != (target_r, target_c):
+        if grid[nx][ny] and (nx, ny) != (attacker_r, attacker_c):
             grid[nx][ny] -= grid[attacker_r][attacker_c] // 2
             isInvolve[nx][ny] = 1
 

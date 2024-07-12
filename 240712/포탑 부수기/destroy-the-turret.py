@@ -1,90 +1,147 @@
-N, M, K = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(N)]
-turn = [[0] * M for _ in range(N)]  # 공격한 턴수를 기록(최근공격 체크)
-
 from collections import deque
-def bfs(si,sj,ei,ej):
-    q = deque()
-    v = [[[] for _ in range(M)] for _ in range(N)]  # 경로를 표시하기 위한 visited
 
-    q.append((si,sj))
-    v[si][sj]=(si,sj)
-    d = arr[si][sj]             # demage
+# 입력
+n, m, k = map(int, input().split())
+grid = [
+    list(map(int, input().split())) for _ in range(n)
+]
+
+# 2D 배열 (마지막 공격한 시점 (N*M))
+isAttack = [
+    [0 for _ in range(m)] for _ in range(n)
+]
+
+# 2D 배열 (이번 턴에 involve 된 Cell 기록 (N*M))
+isInvolve = [
+    [0 for _ in range(m)] for _ in range(n)
+]
+
+back_x = [[0] * m for _ in range(n)]
+back_y = [[0] * m for _ in range(n)]
+
+def laserAttack(attacker_r, attacker_c, target_r, target_c):
+    q = deque([(attacker_r, attacker_c)])
+    visited = [[0 for _ in range(m)] for _ in range(n)]
+    visited[attacker_r][attacker_c] = 1
+    dx, dy = [0, 1, 0, -1], [1, 0, -1, 0]
+
+    # back 배열 초기화
+    for i in range(n):
+        for j in range(m):
+            back_x[i][j] = 0
+            back_y[i][j] = 0
 
     while q:
-        ci,cj = q.popleft()
-        if (ci,cj)==(ei,ej):            # 목적지 좌표 도달
-            arr[ei][ej]=max(0, arr[ei][ej]-d)   # 목표 d만큼 타격
-            while True:
-                ci,cj = v[ci][cj]       # 직전좌표
-                if (ci,cj)==(si,sj):    # 시작(공격자)까지 되집어 왔으면 종료
-                    return True
-                arr[ci][cj]=max(0,arr[ci][cj]-d//2)
-                fset.add((ci,cj))
+        x, y = q.popleft()
+        if (x, y) == (target_r, target_c):
+            return True
 
-        # 우선순위: 우/하/좌/상 (미방문, 조건: >0 포탑있고)
-        for di,dj in ((0,1),(1,0),(0,-1),(-1,0)):
-            ni,nj = (ci+di)%N, (cj+dj)%M    # 반대편으로 연결
-            if len(v[ni][nj])==0 and arr[ni][nj]>0:
-                q.append((ni,nj))
-                v[ni][nj]=(ci,cj)
-    # 목적지 찾지 못함!!!
+        for i in range(4):
+            nx = (x + dx[i] + n) % n
+            ny = (y + dy[i] + m) % m
+
+            if not visited[nx][ny] and grid[nx][ny] > 0:
+                back_x[nx][ny] = x
+                back_y[nx][ny] = y
+                q.append((nx, ny))
+                visited[nx][ny] = 1
     return False
 
-def bomb(si,sj,ei,ej):
-    d = arr[si][sj]                         # demage
-    # print(ei,ej)
-    arr[ei][ej] = max(0, arr[ei][ej] - d)   # 목표 d만큼 타격
-    # 목표좌료 주변 8개에 1/2피해 (나를 제외한)
-    for di,dj in ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)):
-        ni, nj = (ei+di) % N, (ej+dj) % M  # 반대편으로 연결
-        if (ni,nj)!=(si,sj):
-            arr[ni][nj] = max(0, arr[ni][nj]-d//2)
-            fset.add((ni,nj))
+def cannonAttack(attacker_r, attacker_c, target_r, target_c):
+    global totalCannons
+    # 타겟 위치에 한발
+    grid[target_r][target_c] -= grid[attacker_r][attacker_c]
 
-for T in range(1, K + 1):
-    # [1] 공격자 선정: 공격력 낮은->가장 최근 공격자->행+열(큰)->열(큰)
-    mn, mx_turn, si, sj = 5001, 0, -1, -1
-    for i in range(N):
-        for j in range(M):
-            if arr[i][j]<=0:    continue    # 포탑이 아니면 skip
-            if mn>arr[i][j] or (mn==arr[i][j] and mx_turn<turn[i][j]) or \
-                (mn==arr[i][j] and mx_turn==turn[i][j] and si+sj<i+j) or \
-                (mn==arr[i][j] and mx_turn==turn[i][j] and si+sj==i+j and sj<j):
-                mn, mx_turn, si, sj = arr[i][j], turn[i][j], i, j   # si,sj 공격자
+    # 주변 8곳에 한발씩
+    dxs, dys = [-1, 1, 0, 0, -1, -1, 1, 1], [0, 0, -1, 1, -1, 1, -1, 1]
+    for dx, dy in zip(dxs, dys):
+        nx, ny = target_r + dx, target_c + dy
+        nx = (nx + n) % n
+        ny = (ny + m) % m
 
-    # [2] 공격(공격당할 포탑선정) & 포탑부서짐
-    # 2-1) 공격 당할 포탑 선정: 공격력 높은->가장 오래전 공격->행+열(작은)->열(작은)
-    mx, mn_turn, ei, ej = 0, T, N, M
-    for i in range(N):
-        for j in range(M):
-            if arr[i][j]<=0:    continue    # 포탑이 아니면 skip
-            if mx<arr[i][j] or (mx==arr[i][j] and mn_turn>turn[i][j]) or \
-                (mx==arr[i][j] and mn_turn==turn[i][j] and ei+ej>i+j) or \
-                (mx==arr[i][j] and mn_turn==turn[i][j] and ei+ej==i+j and ej>j):
-                mx, mn_turn, ei, ej = arr[i][j], turn[i][j], i, j   # ei,ej 공격대상자
+        if grid[nx][ny] and (nx, ny) != (attacker_r, attacker_c):
+            grid[nx][ny] -= grid[attacker_r][attacker_c] // 2
+            isInvolve[nx][ny] = 1
 
-    # 2-2) 레이저공격 (우하좌상 순서로 최단거리이동-BFS, %N, %M 처리 필요(양끝연결))
-    arr[si][sj]+=(N+M)  # 공격력 상승        # 즉시반영시 가장 센 포탑이 될 수도 있음
-    turn[si][sj]=T      # 이번턴에 공격
-    fset = set()
-    fset.add((si,sj))
-    fset.add((ei,ej))
-    if bfs(si,sj,ei,ej)==False:     # 레이저공격 실패
 
-        # 2-3) 포탄공격(레이저로 목적지 도달 못할 경우)
-        bomb(si,sj,ei,ej)
+for turn_Number in range(1, k + 1):
+    # (1) 공격자 선정
+    # 격자를 순회하며 가장 작은 포탑을 찾습니다
+    cannons = []
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] > 0:
+                cannons.append((grid[i][j], isAttack[i][j], i + j, j))
+    cannon = sorted(cannons, key=lambda x: (x[0], -x[1], -x[2], -x[3]))
+    temp1, temp2, attacker_r, attacker_c = cannon[0]
+    attacker_r, attacker_c = attacker_r - attacker_c, attacker_c
 
-    # [3] 포탑정비(공격에 상관없었던 포탑들 +1)
-    for i in range(N):
-        for j in range(M):
-            if arr[i][j]>0 and (i,j) not in fset:
-                arr[i][j]+=1
+    # 가장 작은 캐논을 찾아서 n + m 업데이트
+    # grid[attacker_r][attacker_c] += n + m
+    # 공격자 기록
+    isAttack[attacker_r][attacker_c] = turn_Number
+    isInvolve[attacker_r][attacker_c] = 1
 
-    cnt = N*M
-    for lst in arr:
-        cnt-=lst.count(0)
-    if cnt<=1:              # 남은 포탑이 1이하면 종료!
+    # (2) 공격
+    # (2-1) 공격 대상 선정: 자신을 제외한 가장 강한 포탑
+    targets = []
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] > 0 and (i,j) != (attacker_r, attacker_c):
+                targets.append((grid[i][j], isAttack[i][j], i + j, j))
+
+    grid[attacker_r][attacker_c] += n + m
+    target = sorted(targets, key=lambda x: (-x[0], x[1], x[2], x[3]))
+    temp1, temp2, target_r, target_c = target[0]
+    target_r, target_c = target_r - target_c, target_c
+    isInvolve[target_r][target_c] = 1
+
+
+    # (2-2) 레이저 공격 시도
+    isLaserPossible = laserAttack(attacker_r, attacker_c, target_r, target_c)
+
+    # 경로 역추적
+    if isLaserPossible:
+        # 타겟 위치에 있는 포탑 공격
+        grid[target_r][target_c] -= grid[attacker_r][attacker_c]
+
+        # 인덱스 계산
+        cx, cy = back_x[target_r][target_c], back_y[target_r][target_c]
+
+        while attacker_r != cx or attacker_c != cy:
+            grid[cx][cy] -= grid[attacker_r][attacker_c] // 2
+            next_x, next_y = back_x[cx][cy], back_y[cx][cy]
+            isInvolve[cx][cy] = 1
+            cx, cy = next_x, next_y
+
+    else:
+        # (2-3) 포탄 공격 시도
+        cannonAttack(attacker_r, attacker_c, target_r, target_c)
+
+    # (3) 포탑 정비
+    for i in range(n):
+        for j in range(m):
+            if isInvolve[i][j] == 0 and grid[i][j] > 0:
+                grid[i][j] += 1
+
+    isInvolve = [[0 for _ in range(m)] for _ in range(n)]
+
+
+    # Early Stopping Condition
+    totalCannons = 0
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] > 0:
+                totalCannons += 1
+
+    if totalCannons <= 1:
         break
 
-print(max(map(max, arr)))
+
+
+
+currMax = float('-inf')
+for i in range(n):
+    for j in range(m):
+        currMax = max(currMax, grid[i][j])
+print(currMax)

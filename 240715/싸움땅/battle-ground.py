@@ -1,3 +1,6 @@
+# i love you
+# -stephanie-
+
 n, m, k = map(int, input().split())
 arr = [list(map(int, input().split())) for _ in range(n)]
 
@@ -16,10 +19,11 @@ for i in range(m):
         gun[i] = 0
 
 # 플레이어 업데이트
-offset = 1
+offset = 0
+playerArr = [[0 for _ in range(n)] for _ in range(n)]
 for playerInfo in player:
     x, y, d, s = playerInfo
-    arr[x][y] = 100000 + offset
+    playerArr[x][y] = offset
     offset += 1
 
 
@@ -30,9 +34,9 @@ def in_range(x, y):
 def movePlayer(playerNum, x, y, d, s, dx, dy):
     # 이동 후 플레이어의 여부에 따라 2가지 경우
     # 플레이어가 있는 경우
-    if arr[x][y] - 100001 >= 0:
+    if playerArr[x][y] > 0:
         # 상대방의 능력
-        oppNumber = arr[x][y] - 100001
+        oppNumber = playerArr[x][y]
         oppX, oppY, oppD, oppS = player[oppNumber]
         oppPower = gun[oppNumber] + oppS
 
@@ -42,17 +46,43 @@ def movePlayer(playerNum, x, y, d, s, dx, dy):
         # 능력치 비교
         if myPower > oppPower:
             # 내 능력치가 더 큰 경우
+
+            # 이긴 플레이어
             difference = myPower - oppPower
             scoreBoard[playerNum] += difference
-            arr[x][y] = 100001 + playerNum
+            playerArr[x][y] = playerNum
             player[playerNum] = (x, y, d, s)
+
+            # 진 플레이어
+            # 해당 셀에 총을 내려놓고, 내 총을 버렸다 처리
+            arr[x][y] = max(arr[x][y], gun[oppNumber])
+            gun[oppNumber] = 0
+
+            # 다음 방향으로 이동
+            nx, ny = x + dx[d], y + dy[d]
+
+            # 방향 찾아주기
+            while not in_range(nx, ny) or arr[nx][ny] - 100001 >= 0:
+                d = (d + 1) % 4
+
+            # 이동
+            nx, ny = nx + dx[d], y + dy[d]
+
+            # 총이 있는지 확인
+            if arr[nx][ny] > 0:
+                # 총이 있습니다
+                gun[oppNumber] = arr[nx][ny]
+
+            playerArr[nx][ny] = oppNumber
+            player[playerNum] = (nx, ny, d, s)
+
         else:
             # 상대방의 능력치가 더 큰 경우
             difference = oppPower - myPower
             scoreBoard[oppNumber] += difference
 
             # 해당 셀에 총을 내려놓고, 내 총을 버렸다 처리
-            # arr[x][y] = max(arr[x][y], gun[playerNum])
+            arr[x][y] = max(arr[x][y], gun[playerNum])
             gun[playerNum] = 0
 
             # 다음 방향으로 이동
@@ -99,11 +129,11 @@ for round in range(1, k+1):
 
         if in_range(nx, ny):
         # 격자를 벗어나지 않는 경우
-            arr[x][y] = 0
+            playerArr[x][y] = 0
             movePlayer(playerNumber, nx, ny, d, s, dx, dy)
         else:
         # 격자를 벗어나는 경우 -> 방향이 정 반대로 바뀜 (direction = (direction + 2) % 4, player 배열에도 업데이트
-            arr[x][y] = 0
+            playerArr[x][y] = 0
             d = (d + 2) % 4
             # 방향 바꾼거 업데이트 해주고
             nx, ny = x + dx[d], y + dy[d]
@@ -112,5 +142,4 @@ for round in range(1, k+1):
             movePlayer(playerNumber, nx, ny, d, s, dx, dy)
 
 
-for i in range(m):
-    print(scoreBoard[i], end = " ")
+print(scoreBoard)

@@ -55,6 +55,7 @@ dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
 for year in range(1, m + 1):
     # 제초제가 사라져야하는지 여부 체크
     if len(jecho) > 0:
+        indexToRemove = []
         for i in range(len(jecho)):
             yearToWake, row, col = jecho[i]
             if year == yearToWake:
@@ -64,9 +65,11 @@ for year in range(1, m + 1):
                         nx, ny = row + (i * dx), col + (i * dy)
                         if in_range(nx, ny) and arr[nx][ny] > 0:
                             arr[nx][ny] = 0
+                indexToRemove.append(i)
 
-                # 제조제 배열에서 제거
-                jecho.remove(jecho[i])
+        # 제조제 배열에서 제거
+        for i in indexToRemove:
+            jecho.remove(jecho[i])
 
     for i in range(n):
         for j in range(n):

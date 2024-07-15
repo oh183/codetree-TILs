@@ -26,28 +26,36 @@ def in_range(x, y):
 x, y = 0, 0
 visited = [[False for _ in range(n)] for _ in range(n)]
 visited[x][y] = True
-path = [(0, 0, 0)]
+outer_path = [(0, 0, 1)]
+inner_path = [(0, 0, 0)]
+
 for i in range(1, n*n):
     nx, ny = x + dx[direction], y + dy[direction]
     flag = 0
     if not in_range(nx, ny) or visited[nx][ny]:
         direction = (direction + 1) % 4
-        flag = 1
+
     x, y = x + dx[direction], y + dy[direction]
+
+    if not in_range(x + dx[direction], y + dy[direction]) or visited[x + dx[direction]][y + dy[direction]]:
+        flag = 1
+
     visited[x][y] = True
     if i + 1 == n*n:
-        path.append((x, y, 0))
+        outer_path.append((x, y, 0))
+        inner_path.append((x, y, 0))
     else:
-        path.append((x, y, flag))
+        outer_path.append((x, y, flag))
+        inner_path.append((x, y, flag))
 
 
 score = 0
+s_direction = 0
 
-followPath = path[::-1] + path + path[::-1] + path + path[::-1]
+followPath = inner_path[::-1] + outer_path + inner_path[::-1] + outer_path + inner_path[::-1]
 for turn in range(1, k + 1):
     # 술래 좌표
     soolaeX, soolaeY, directionChange = followPath[turn - 1]
-    s_direction = 0
 
     # 도망자가 움직입니다.
     for runnerNum in range(len(runners)):
@@ -66,7 +74,7 @@ for turn in range(1, k + 1):
             if in_range(nx, ny):
                 # 술래가 없으면 움직임
                 if (nx, ny) != (soolaeX, soolaeY):
-                    temp = runnerMap[runnerX][runnerY] - 1
+                    temp = runnerMap[runnerX][runnerY]
                     runnerMap[runnerX][runnerY] = 0
                     runnerMap[nx][ny] = temp
                     runners[runnerNum] = (nx, ny, runnerDirection)
@@ -74,13 +82,14 @@ for turn in range(1, k + 1):
                 runnerDirection = (runnerDirection + 2) % 4
                 nx, ny = runnerX + dx[runnerDirection], runnerY + dy[runnerDirection]
                 if (nx, ny) != (soolaeX, soolaeY):
-                    temp = runnerMap[runnerX][runnerY] - 1
+                    temp = runnerMap[runnerX][runnerY]
                     runnerMap[runnerX][runnerY] = 0
                     runnerMap[nx][ny] = temp
                     runners[runnerNum] = (nx, ny, runnerDirection)
 
     # 술래가 움직입니다.
     newSoolaeX, newSoolaeY, directionChange = followPath[turn]
+    ndx, ndy = [-1, 0, 1, 0], [0, 1, 0, -1]
     if directionChange == 1:
         s_direction = (s_direction + 1) % 4
     # 도망자 잡기: 시야는 정확히 3칸
@@ -91,16 +100,16 @@ for turn in range(1, k + 1):
             break
 
         if treeMap[newSoolaeX][newSoolaeY] == 1:
-            newSoolaeX, newSoolaeY = newSoolaeX + dx[s_direction], newSoolaeY + dy[s_direction]
+            newSoolaeX, newSoolaeY = newSoolaeX + ndx[s_direction], newSoolaeY + ndy[s_direction]
             continue
 
         if runnerMap[newSoolaeX][newSoolaeY] > 0:
-            temp = runnerMap[newSoolaeX][newSoolaeY] - 1
+            temp = runnerMap[newSoolaeX][newSoolaeY]
             runnerMap[newSoolaeX][newSoolaeY] = 0
-            runners[temp] = (-999, -999, -999)
+            runners[temp - 1] = (-999, -999, -999)
             runnerCnt += 1
 
-        newSoolaeX, newSoolaeY = newSoolaeX + dx[s_direction], newSoolaeY + dy[s_direction]
+        newSoolaeX, newSoolaeY = newSoolaeX + ndx[s_direction], newSoolaeY + ndy[s_direction]
 
     score += turn * runnerCnt
 

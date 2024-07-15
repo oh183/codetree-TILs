@@ -34,19 +34,20 @@ def jechojae(year):
                 tester.append((effect, i, j))
 
     # 가장 효과가 좋았던 위치 찾기
-    tester.sort(key= lambda x: (-x[0], x[1], x[2]))
-    killed, row, col = tester[0]
-    score += killed
+    if tester:
+        tester.sort(key= lambda x: (-x[0], x[1], x[2]))
+        killed, row, col = tester[0]
+        score += killed
 
-    # 해당 위치에 제초제 살포
-    for i in range(k+1):
-        for dx, dy in zip(dxs, dys):
-            nx, ny = row + (i * dx), col + (i * dy)
-            if in_range(nx, ny) and arr[nx][ny] > 0:
-                arr[nx][ny] = -2
+        # 해당 위치에 제초제 살포
+        for i in range(k+1):
+            for dx, dy in zip(dxs, dys):
+                nx, ny = row + (i * dx), col + (i * dy)
+                if in_range(nx, ny) and arr[nx][ny] > 0:
+                    arr[nx][ny] = -2
 
-    # 제조체 뿌린 시간 기록
-    jecho.append((year + c + 1, row, col))
+        # 제조체 뿌린 시간 기록
+        jecho.append((year + c + 1, row, col))
 
 
 dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]

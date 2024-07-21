@@ -26,6 +26,9 @@ for i in range(rotate_num):
     rotateArr = [0, 0, 0, 0]
 
     for i in range(4):
+        if i == n:
+            continue
+
         if i == 0:
             if chairs[i][sa] != chairs[i + 1][sb]:
                 rotateArr[i] = d
@@ -35,6 +38,8 @@ for i in range(rotate_num):
         else:
             if chairs[i][sb] != chairs[i - 1][sa]:
                 rotateArr[i] = d
+    
+    rotateArr[n] = d
 
     if in_range(n - 1):
         rotateArr[n - 1] *= -1

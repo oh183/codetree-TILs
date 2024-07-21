@@ -50,7 +50,7 @@ for i in range(rotate_num):
                 rotateArr[i] = 0
     if in_range(n + 1):
         if rotateArr[n + 1] == 0:
-            for i in range(i, 4):
+            for i in range(n+1, 4):
                 rotateArr[i] = 0
 
     for idx, rot in enumerate(rotateArr):

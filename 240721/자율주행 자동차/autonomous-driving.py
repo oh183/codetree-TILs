@@ -13,15 +13,16 @@ def in_range(nx, ny):
 
 
 def simulate(startX, startY, direc):
+    visited[startX][startY] = 1
 
-    direc = (direc + 3) % 4
     for _ in range(4):
+        direc = (direc + 3) % 4
         if in_range(startX + dxs[direc], startY + dys[direc]) and visited[startX + dxs[direc]][startY + dys[direc]] == 0 and grid[startX + dxs[direc]][startY + dys[direc]] == 0:
             visited[startX + dxs[direc]][startY + dys[direc]] = 1
             return startX + dxs[direc], startY + dys[direc], direc, 0
-        direc = (direc + 3) % 4
 
-    return startX + dxs[(direc + 2) % 4], startY + dys[(direc + 2) % 4], direc , 1
+
+    return startX + dxs[(direc + 2) % 4], startY + dys[(direc + 2) % 4], direc, 1
 
 while True:
     initX, initY, d, flag = simulate(initX, initY, d)

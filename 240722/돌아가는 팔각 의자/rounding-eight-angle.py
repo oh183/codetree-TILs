@@ -37,7 +37,7 @@ for i in range(rotate_num):
                 rotateArr[i] = d
 
     if in_range(n - 1):
-        rotateArr[n - 1] *= -d
+        rotateArr[n - 1] *= -1
 
     if in_range(n + 1):
         rotateArr[n + 1] *= -1

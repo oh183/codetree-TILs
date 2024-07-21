@@ -25,20 +25,17 @@ for i in range(rotate_num):
     sa, sb = 2, 6
     rotateArr = [0, 0, 0, 0]
 
-    for i in range(4):
-        if i == n:
-            continue
-
+    for i in range(3):
         if i == 0:
             if chairs[i][sa] != chairs[i + 1][sb]:
                 rotateArr[i] = d
         elif i == 1 or i == 2:
-            if chairs[i][sa] != chairs[i + 1][sb] or chairs[i][sb] != chairs[i - 1][sa]:
+            if chairs[i][sa] != chairs[i + 1][sb]:
                 rotateArr[i] = d
         else:
             if chairs[i][sb] != chairs[i - 1][sa]:
                 rotateArr[i] = d
-    
+
     rotateArr[n] = d
 
     if in_range(n - 1):
@@ -47,6 +44,15 @@ for i in range(rotate_num):
     if in_range(n + 1):
         rotateArr[n + 1] *= -1
 
+    if in_range(n - 1):
+        if rotateArr[n - 1] == 0:
+            for i in range(n):
+                rotateArr[i] = 0
+    if in_range(n + 1):
+        if rotateArr[n + 1] == 0:
+            for i in range(i, 4):
+                rotateArr[i] = 0
+
     for idx, rot in enumerate(rotateArr):
         chairs[idx].rotate(rot)
 
@@ -54,6 +60,8 @@ s_arr = [0,0,0,0]
 for i in range(4):
     if chairs[i][0] == 1:
         s_arr[i] = 1
+
+
 
 
 print(s_arr[0] + 2 * s_arr[1] + 4 * s_arr[2] + 8 * s_arr[3])

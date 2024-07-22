@@ -27,8 +27,8 @@ def simulate():
                     nx, ny = (i + (s * dxs[d])) % n, (j + (s * dys[d])) % n
                     tempGrid[nx][ny].append([ma, s, d])
 
-                    # 기존 위치 삭제
-                    grid[i][j].remove(atomEl)
+                # 기존 위치 삭제
+                grid[i][j].remove(atomEl)
 
     for i in range(n):
         for j in range(n):

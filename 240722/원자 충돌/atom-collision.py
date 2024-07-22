@@ -28,7 +28,7 @@ def simulate():
                     tempGrid[nx][ny].append([ma, s, d])
 
                 # 기존 위치 삭제
-                grid[i][j].remove(atomEl)
+                grid[i][j] = []
 
     for i in range(n):
         for j in range(n):
@@ -50,13 +50,17 @@ def simulate():
                 newMass = newMass // 5
                 newSpeed = newSpeed // len(newDirec)
 
+                if newMass == 0:
+                    grid[i][j] = []
+                    continue
+
                 # [2 - 1] 방향 결정
                 strCnt, diaCnt, isDiagonal = 0, 0, 0
                 for someDirection in newDirec:
-                    if someDirection in (1, 3, 5, 7):
+                    if someDirection in (0, 2, 4, 6):
                         strCnt += 1
 
-                    if someDirection in (0, 2, 4, 6):
+                    if someDirection in (1, 3, 5, 7):
                         diaCnt += 1
 
                 if strCnt == len(newDirec) or diaCnt == len(newDirec):

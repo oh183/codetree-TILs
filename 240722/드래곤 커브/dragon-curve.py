@@ -4,19 +4,19 @@ curves = [list(map(int, input().split())) for _ in range(n)]
 grid = [[0 for _ in range(101)] for _ in range(101)]
 
 for i in range(n):
-    x, y, d, g = curves[i]
+    y, x, d, g = curves[i]
     curvePath = [d]
+    grid[y][x] = 1
 
-    dx, dy = [1, 0, -1, 0], [0, -1, 0, 1]
+    dx, dy =  [1, 0, -1, 0], [0, -1, 0, 1]
 
     for _ in range(g):
-        for p in range(len(curvePath) -1, -1, -1):
+        for p in range(len(curvePath) -1, -1,- 1):
             curvePath.append((curvePath[p] + 1) % 4)
 
-    for i in curvePath:
-        nx, ny = x + dx[i], y + dy[i]
-        grid[nx][ny] = 1
-        x, y = nx, ny
+    for i in range(len(curvePath)):
+        y , x = y + dy[curvePath[i]] , x + dx[curvePath[i]]
+        grid[y][x] = 1
 
 counter = 0
 for i in range(100):

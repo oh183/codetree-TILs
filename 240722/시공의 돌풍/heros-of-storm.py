@@ -6,7 +6,17 @@ tempGrid = [[0 for _ in range(m)] for _ in range(n)]
 def in_range(nx, ny):
     return 0 <= nx < n and 0 <= ny < m
 
+# 청소 시작
+# 청소기 위치 찾고
+airs = []
+for i in range(n):
+    for j in range(1):
+        if grid[i][j] == -1:
+            airs.append((i, j))
+upperAir, lowerAir = airs[0], airs[1]
+
 for time in range(t):
+    tempGrid = [[0 for _ in range(m)] for _ in range(n)]
     dxs, dys = [0, -1, 0, 1], [1, 0, -1, 0]
     # 먼지의 확산
     for i in range(n):
@@ -20,17 +30,8 @@ for time in range(t):
     # 업데이트
     for i in range(n):
         for j in range(m):
-            if grid[i][j] > 0:
+            if grid[i][j] >= 0:
                 grid[i][j] += tempGrid[i][j]
-
-    # 청소 시작
-    # 청소기 위치 찾고
-    airs = []
-    for i in range(n):
-        for j in range(m):
-            if grid[i][j] == -1:
-                airs.append((i, j))
-    upperAir, lowerAir = airs[0], airs[1]
 
     # 청소기 path 찾기
 
@@ -96,6 +97,7 @@ for time in range(t):
     for i in range(len(lowerPath)):
         x, y = lowerPath[i]
         grid[x][y] = lowerValue[i]
+
 
 res = 0
 for i in range(n):

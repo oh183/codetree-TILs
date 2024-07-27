@@ -1,90 +1,42 @@
-n, l, r = map(int, input().split())
-grid = [list(map(int, input().split())) for _ in range(n)]
-
-# visited 배열
-visited = [[0 for _ in range(n)] for _ in range(n)]
-
-# 각 그리드당 계란틀의 상태 표시 0-> 벽이 있다, 1-> 벽이 분리되어 있다
-eggWallStatus = {}
-for i in range(n):
-    for j in range(n):
-        if (i, j) not in eggWallStatus:
-            eggWallStatus[(i, j)] = [0, 0, 0, 0]
-
-dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
-
-
-def in_range(nx, ny):
-    return 0 <= nx < n and 0 <= ny < n
-
-
+# [2] bfs를 별도 함수로 풀이(상대적으로 느림: 1350mS)
 from collections import deque
+def bfs(si, sj):
+    q = deque()
 
+    q.append((si,sj))   # 큐에 초기데이터 삽입
+    v[si][sj]=1         # 방문표시
+    alst = [(si,sj)]    # 연합에 추가
+    sm = arr[si][sj]    # 합계
 
-def addEggs(i, j):
-    q = deque([(i, j)])
-    visited[i][j] = 1
-    dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
-    visit = [(i, j)]
     while q:
-        x, y = q.popleft()
-        brokenWalls = eggWallStatus[(x, y)]
-        direction = 0
-        for dx, dy in zip(dxs, dys):
-            nx, ny = x + dx, y + dy
-            if in_range(nx, ny) and visited[nx][ny] == 0 and brokenWalls[direction] == 1:
-                q.append((nx, ny))
-                visit.append((nx, ny))
-                visited[nx][ny] = 1
-            direction += 1
+        ci,cj = q.popleft()
+        # 네방향, 범위내, 미중복, *조건맞으면(L<=인구차이<=R)
+        for di,dj in ((-1,0),(1,0),(0,-1),(0,1)):
+            ni,nj = ci+di, cj+dj
+            if 0<=ni<N and 0<=nj<N and v[ni][nj]==0 and L<=abs(arr[ci][cj]-arr[ni][nj])<=R:
+                q.append((ni,nj))
+                v[ni][nj]=1
+                alst.append((ni,nj))
+                sm+=arr[ni][nj]
+    if len(alst)>1:     # 연합인 경우 처리(평균값 각각 저장)
+        for ti,tj in alst:
+            arr[ti][tj]=sm//len(alst)
+        return 1        # 연합이 있는 경우 1 리턴
+    return 0            # 연합 없으면 0리턴
 
-    totalEggCells = len(visit)
-    # find Sum
-    newEggSum = 0
-    for x, y in visit:
-        newEggSum += grid[x][y]
-    newEggVal = newEggSum // totalEggCells
+N, L, R = map(int, input().split())
+arr = [list(map(int, input().split())) for _ in range(N)]
 
-    for x, y in visit:
-        grid[x][y] = newEggVal
-
-
-cnt = 0
-while True:
-    # 계란틀 분리
-    for i in range(n):
-        for j in range(n):
-            currVal = grid[i][j]
-            currDirection = 0
-            for dx, dy in zip(dxs, dys):
-                nx, ny = i + dx, j + dy
-                if in_range(nx, ny):
-                    diff = abs(currVal - grid[nx][ny])
-                    if l <= diff <= r:
-                        currWall = eggWallStatus[(i, j)]
-                        currWall[currDirection] = 1
-                        eggWallStatus[(i, j)] = currWall
-                currDirection += 1
-
-    # 더 이상 이동을 못하는 경우 break (계란틀이 분리가 X)
-    isBreak = 0
-    for i in range(len(eggWallStatus.keys())):
-        isBreak += sum(list(eggWallStatus.values())[i])
-
-    if isBreak == 0:
+ans = 0
+while ans<=2000:
+    # [1] 전체를 순회하면서, 미방문=>연합처리
+    v = [[0]*N for _ in range(N)]
+    flag = 0
+    for i in range(N):
+        for j in range(N):
+            if v[i][j] == 0:                # 미방문
+                flag = max(flag, bfs(i,j))  # bfs => 연합이 있었으면 1
+    if flag==0:                             # 이동이 없었음
         break
-
-    # 계란 합치기
-    for i in range(n):
-        for j in range(n):
-            if visited[i][j] == 0:
-                addEggs(i, j)
-
-    # 벽 초기화
-    eggWallStatus = {}
-    for i in range(n):
-        for j in range(n):
-            if (i, j) not in eggWallStatus:
-                eggWallStatus[(i, j)] = [0, 0, 0, 0]
-    cnt += 1
-print(cnt)
+    ans+=1
+print(ans)

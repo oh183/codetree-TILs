@@ -4,7 +4,7 @@ c -= 1
 arr = [list(map(int, input().split())) for _ in range(3)]
 
 for ans in range(101):  # 100초 이내에 답 찾는 경우 break
-    if arr[r][c]==k:
+    if 0<=r<len(arr) and 0<=c<len(arr[0]) and arr[r][c]==k:
         break
 
     # [1] 열연산인경우 전치행렬로 변환해서 처리! => 원상복구

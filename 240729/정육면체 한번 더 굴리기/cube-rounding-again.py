@@ -15,7 +15,7 @@ def bfs(si, sj):
     value = grid[si][sj]
     q = deque([(si, sj)])
     visited = [[0 for _ in range(n)] for _ in range(n)]
-
+    visited[si][sj] = 1
     while q:
         x, y = q.popleft()
 

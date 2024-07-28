@@ -15,21 +15,20 @@ def bfs(si, sj):
     value = grid[si][sj]
     q = deque([(si, sj)])
     visited = [[0 for _ in range(n)] for _ in range(n)]
-
+    visited[si][sj] = 1
     while q:
         x, y = q.popleft()
-
         for dx, dy in zip(dxs, dys):
             nx, ny = x + dx, y + dy
             if in_range(nx, ny) and visited[nx][ny] == 0 and grid[nx][ny] == value:
                 q.append((nx, ny))
                 visited[nx][ny] = 1
-    res = 0
+    ctr = 0
     for i in range(n):
         for j in range(n):
             if visited[i][j] == 1:
-                res += 1
-    return res
+                ctr += 1
+    return ctr
 
 
 x, y = 0, 0
@@ -47,14 +46,14 @@ for turn in range(m):
     result += (point * score)
 
     # 면 바꾸기
-    if dr == 0:
-        n1, n3, n2, n4, n5, n6 = n4, n1, n2, n6, n5, n4
-    elif dr == 1:
-        n1, n3, n2, n4, n5, n6 = n5, n3, n1, n4, n6, n2
-    elif dr == 2:
-        n1, n3, n2, n4, n5, n6 = n3, n6, n2, n1, n5, n4
-    elif dr == 3:
-        n1, n3, n2, n4, n5, n6 = n2, n3, n6, n4, n1, n5
+    if dr == 0:  # 동쪽
+        n1, n3, n4, n6 = n4, n1, n6, n3
+    elif dr == 1:  # 남쪽
+        n1, n2, n5, n6 = n5, n1, n6, n2
+    elif dr == 2:  # 서쪽
+        n1, n3, n4, n6 = n3, n6, n1, n4
+    elif dr == 3:  # 북쪽
+        n1, n2, n5, n6 = n2, n6, n1, n5
 
     # 방향 전환?
     if n6 > grid[nx][ny]:

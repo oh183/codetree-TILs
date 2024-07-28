@@ -40,7 +40,7 @@ for turn in range(m):
         score = bfs(nx, ny)
     else:
         dr = (dr + 2) % 4
-        nx, ny = x + dx[dr], y + dy[dr]
+        nx, ny = x + dxs[dr], y + dys[dr]
         point = grid[nx][ny]
         score = bfs(nx, ny)
     

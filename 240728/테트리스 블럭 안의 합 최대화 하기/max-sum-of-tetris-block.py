@@ -102,7 +102,7 @@ for j in range(m - 1):
 # 17
 for i in range(n - 1):
     for j in range(m - 2):
-        value = grid[i][j + 1] + grid[i][j + 2] + grid[i + 1][j + 1] + grid[i+1][j + 2]
+        value = grid[i][j + 1] + grid[i][j + 2] + grid[i + 1][j] + grid[i+1][j + 1]
         currMax = max(currMax, value)
 
 # 18

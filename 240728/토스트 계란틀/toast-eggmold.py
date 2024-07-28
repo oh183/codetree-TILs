@@ -1,42 +1,46 @@
-# [2] bfs를 별도 함수로 풀이(상대적으로 느림: 1350mS)
 from collections import deque
-def bfs(si, sj):
-    q = deque()
 
-    q.append((si,sj))   # 큐에 초기데이터 삽입
-    v[si][sj]=1         # 방문표시
-    alst = [(si,sj)]    # 연합에 추가
-    sm = arr[si][sj]    # 합계
+n, l, r = map(int, input().split())
+grid = [list(map(int, input().split())) for _ in range(n)]
+
+def in_range(nx, ny):
+    return 0 <= nx < n and 0 <= ny < n
+
+def bfs(si, sj):
+    q = deque([(si, sj)])
+    visited[si][sj] = 1
+    dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
+    answerList = [(si, sj)]
+    sumValue = grid[si][sj]
 
     while q:
-        ci,cj = q.popleft()
-        # 네방향, 범위내, 미중복, *조건맞으면(L<=인구차이<=R)
-        for di,dj in ((-1,0),(1,0),(0,-1),(0,1)):
-            ni,nj = ci+di, cj+dj
-            if 0<=ni<N and 0<=nj<N and v[ni][nj]==0 and L<=abs(arr[ci][cj]-arr[ni][nj])<=R:
-                q.append((ni,nj))
-                v[ni][nj]=1
-                alst.append((ni,nj))
-                sm+=arr[ni][nj]
-    if len(alst)>1:     # 연합인 경우 처리(평균값 각각 저장)
-        for ti,tj in alst:
-            arr[ti][tj]=sm//len(alst)
-        return 1        # 연합이 있는 경우 1 리턴
-    return 0            # 연합 없으면 0리턴
+        x, y = q.popleft()
+        for dx, dy in zip(dxs, dys):
+            nx, ny = x + dx, y + dy
+            if in_range(nx, ny) and visited[nx][ny] == 0 and (l <= abs(grid[x][y] - grid[nx][ny]) <= r):
+                q.append((nx, ny))
+                visited[nx][ny] = 1
+                answerList.append((nx, ny))
+                sumValue += grid[nx][ny]
+    if len(answerList) > 1:
+        for x, y in answerList:
+            grid[x][y] = sumValue // len(answerList)
+        return 1
+    return -1
+            
 
-N, L, R = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(N)]
 
-ans = 0
-while ans<=2000:
-    # [1] 전체를 순회하면서, 미방문=>연합처리
-    v = [[0]*N for _ in range(N)]
+cnt = 0
+while True:
+    # 계란틀 분리 (bfs 로 영역을 지정해주기)
+    visited = [[0 for _ in range(n)] for _ in range(n)]
     flag = 0
-    for i in range(N):
-        for j in range(N):
-            if v[i][j] == 0:                # 미방문
-                flag = max(flag, bfs(i,j))  # bfs => 연합이 있었으면 1
-    if flag==0:                             # 이동이 없었음
+    for i in range(n):
+        for j in range(n):
+            if visited[i][j] == 0:
+                flag = max(bfs(i, j), flag)
+    if flag == 0:
         break
-    ans+=1
-print(ans)
+    
+    cnt += 1
+print(cnt)

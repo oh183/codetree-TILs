@@ -42,7 +42,7 @@ for j in range(m - 1):
 # 7
 for i in range(n - 1):
     for j in range(m - 2):
-        value = grid[i][j + 2] + grid[i + 1][j] + grid[i + 1][j + 1] + grid[i][j + 2]
+        value = grid[i + 1][j] + grid[i+1][j + 1] + grid[i+1][j+ 2] + grid[i][j + 2]
         currMax = max(currMax, value)
 
 # 8
@@ -60,7 +60,7 @@ for i in range(n - 1):
 # 10
 for j in range(m - 1):
     for i in range(n - 2):
-        value = grid[i][j] + grid[i + 1][j + 1] + grid[i + 2][j + 1] + grid[i][j + 1]
+        value = grid[i][j] + grid[i][j + 1] + grid[i + 1][j] + grid[i+2][j]
         currMax = max(currMax, value)
 
 # 11
@@ -84,7 +84,7 @@ for i in range(n - 1):
 # 14
 for j in range(m - 1):
     for i in range(n - 2):
-        value = grid[i][j + 1] + grid[i + 1][j + 1] + grid[i + 2][j + 1] + grid[i + 1][j]
+        value = grid[i][j + 1] + grid[i + 1][j] + grid[i + 1][j + 1] + grid[i + 2][j + 1]
         currMax = max(currMax, value)
 
 # 15

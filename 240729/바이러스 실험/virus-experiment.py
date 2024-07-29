@@ -24,7 +24,7 @@ for cycle in range(k):
                 virusAge = (virusGrid[i][j])[0]
                 if yang[i][j] < virusAge:
                     # 본인 나이만큼 바이러스 섭취 X -> 사망
-                    virusGrid[i][j].pop()
+                    virusGrid[i][j].pop(0)
                     deadVirus.append((virusAge, i, j))
                     continue
 
@@ -36,18 +36,22 @@ for cycle in range(k):
                 # 하나 이상인 경우 (나이가 어린 바이러스부터 양분 섭취)
                 virusFriends = virusGrid[i][j]
                 virusFriends.sort()
-
+                lstToPop = []
                 for youngVirus in range(len(virusFriends)):
                     virusAge = virusFriends[youngVirus]
 
                     if yang[i][j] < virusAge:
                         # 본인 나이만큼 바이러스 섭취 X -> 사망
-                        virusGrid[i][j].pop(youngVirus)
+                        lstToPop.append(youngVirus)
                         deadVirus.append((virusAge, i, j))
                     else:
                         # 양분섭취
                         yang[i][j] -= virusAge
                         virusGrid[i][j][youngVirus] += 1
+
+                if lstToPop:
+                    for p in range(len(lstToPop) - 1, -1, -1):
+                        virusGrid[i][j].pop(lstToPop[p])
 
     # 바이러스가 죽은경우 -> 양분으로 전환
     if len(deadVirus) > 0:

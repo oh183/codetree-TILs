@@ -1,43 +1,74 @@
-N, M, K = map(int, input().split())
-add_arr = [list(map(int, input().split())) for _ in range(N)]
-arr = [[5]*N for _ in range(N)]     # 초기양분 모두 5
+n, m, k = map(int, input().split())
+# 마지막에 추가되는 양분의 양
+grid = [list(map(int, input().split())) for _ in range(n)]
 
-v = [[[] for _ in range(N)] for _ in range(N)]
-for _ in range(M):                  # M개의 나무
-    i,j,age = map(int, input().split())
-    v[i-1][j-1].append(age)         # 좌표에 나무 추가
+# 바이러스
+virus = [list(map(int, input().split())) for _ in range(m)]
+virusGrid = [[[] for _ in range(n)] for _ in range(n)]
+for i in range(m):
+    r, c, age = virus[i]
+    virus[i] = r - 1, c - 1, age
+    virusGrid[r - 1][c - 1].append(age)  # 바이러스 번호, 나이
 
-for _ in range(K):  # K년 반복 처리
-    # [1] 봄+여름: 나이순으로 처리 => 양분부족시 나무 죽고 ==> //2 양분추가
-    for i in range(N):
-        for j in range(N):
-            v[i][j].sort()                  # 어린순으로 처리위해 정렬
-            for k in range(len(v[i][j])):   # 순서대로 처리
-                if v[i][j][k]<=arr[i][j]:   # 나이보다 양분이 많다면..
-                    arr[i][j]-=v[i][j][k]   # 양분흡수
-                    v[i][j][k]+=1           # 나이 한살 먹기
-                else:                       # 양분없는경우 => 이후나무들은 모두 양분행
-                    while k<len(v[i][j]):   # 나머지 나무는 양분!
-                        arr[i][j]+=(v[i][j].pop()//2)
-                    break
+# 초기에 각 칸에 5만큼의 양분이 들어있습니다.
+yang = [[5 for _ in range(n)] for _ in range(n)]
 
-    # [2] 가을: 나이가 5의 배수인경우 인접8칸에 나무 1짜리 생성
-    for i in range(N):
-        for j in range(N):
-            for k in range(len(v[i][j])):   # 현 위치의 모든 나무처리
-                if v[i][j][k]%5==0:         # 5의 배수인경우
-                    for di,dj in ((-1,-1),(-1,0),(-1,1),(1,-1),(1,0),(1,1),(0,-1),(0,1)):
-                        ni, nj = i+di, j+dj
-                        if 0<=ni<N and 0<=nj<N:
-                            v[ni][nj].append(1)
+# K 사이클 동안 반복
+for cycle in range(k):
+    deadVirus = []
+    # 각 바이러스의 양분섭취
+    for i in range(n):
+        for j in range(n):
+            virusFriends = virusGrid[i][j]
+            virusFriends.sort()
+            lstToPop = []
+            for youngVirus in range(len(virusFriends)):
+                virusAge = virusFriends[youngVirus]
 
-    # [3] 겨울: 초기양분만큼 추가
-    for i in range(N):
-        for j in range(N):
-            arr[i][j]+=add_arr[i][j]
+                if yang[i][j] < virusAge:
+                    # 본인 나이만큼 바이러스 섭취 X -> 사망
+                    lstToPop.append(youngVirus)
+                    deadVirus.append((virusAge, i, j))
+                else:
+                    # 양분섭취
+                    yang[i][j] -= virusAge
+                    virusGrid[i][j][youngVirus] += 1
 
-ans = 0
-for i in range(N):
-    for j in range(N):
-        ans+=len(v[i][j])
-print(ans)
+            if lstToPop:
+                for p in range(len(lstToPop) - 1, -1, -1):
+                    virusGrid[i][j].pop(lstToPop[p])
+
+    # 바이러스가 죽은경우 -> 양분으로 전환
+    if len(deadVirus) > 0:
+        for k in range(len(deadVirus)):
+            virusAge, i, j = deadVirus[k]
+            yang[i][j] += (virusAge // 2)
+
+    # 바이러스 번식
+    for i in range(n):
+        for j in range(n):
+            if len(virusGrid) == 0:
+                continue
+
+            existingVirus = virusGrid[i][j]
+            for currVirus in existingVirus:
+                age = currVirus
+                if age % 5 == 0:
+                    # 인접한 8칸에 나이가 1인 바이러스가 생깁니다.
+                    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)):
+                        nx, ny = i + dx, j + dy
+                        if 0 <= nx < n and 0 <= ny < n:
+                            virusGrid[nx][ny].append(1)
+
+    # 마지막에 양분 추가
+    for i in range(n):
+        for j in range(n):
+            yang[i][j] += grid[i][j]
+
+# k 사이클 이후 살아있는 바이러스의 양 출력
+alive = 0
+for i in range(n):
+    for j in range(n):
+        alive += len(virusGrid[i][j])
+
+print(alive)

@@ -36,13 +36,10 @@ for cycle in range(k):
 
             if lstToPop:
                 for p in range(len(lstToPop) - 1, -1, -1):
+                    virusAge = virusGrid[i][j][lstToPop[p]]
                     virusGrid[i][j].pop(lstToPop[p])
-
-    # 바이러스가 죽은경우 -> 양분으로 전환
-    if len(deadVirus) > 0:
-        for k in range(len(deadVirus)):
-            virusAge, i, j = deadVirus[k]
-            yang[i][j] += (virusAge // 2)
+                    # 바이러스가 죽은 경우 양분으로 전환
+                    yang[i][j] += (virusAge // 2)
 
     # 바이러스 번식
     for i in range(n):

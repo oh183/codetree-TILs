@@ -12,7 +12,7 @@ def solve():
                 dr=opp_dr[dr]   # 반대방향으로..
                 ni,nj=ci+di[dr],cj+dj[dr]   # 반대방향 이동할 위치
                 lst[i][2]=dr        # 방향 update
-                if arr[ni][nj]==2:  # 이동중지! 다음말로..
+                if not in_range(ni, nj) or arr[ni][nj]==2:  # 이동중지! 다음말로..
                     continue
 
             # [2] 흰색/빨간색에 따라 이동처리(이동위치에 더하고, 지금위치에서 빼고)

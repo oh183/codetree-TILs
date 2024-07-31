@@ -20,7 +20,7 @@ def bfs(si, sj):
                 nx, ny = x + dx, y + dy
                 if in_range(nx, ny) and visited[nx][ny] == 0 and L <= abs(grid[nx][ny] - grid[x][y]) <= R:
                     currCtr += 1
-                    currSum += 1
+                    currSum += grid[nx][ny]
                     nq.append((nx, ny))
                     visited[nx][ny] = 1
                     movedPath.append((nx, ny))
@@ -33,6 +33,7 @@ def bfs(si, sj):
     return -1
 
 ans = 0
+
 while True:
     visited = [[0 for _ in range(n)] for _ in range(n)]
     flag = 0

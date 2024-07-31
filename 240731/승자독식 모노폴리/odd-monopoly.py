@@ -24,7 +24,7 @@ def solve():
         # 각 칸의 냄새 1씩 삭제
         for i in range(n):
             for j in range(n):
-                if v[i][j][1] != -1:
+                if v[i][j][0] != -1:
                     v[i][j][1] -= 1
                     if v[i][j] == 0:
                         v[i][j] = -1
